@@ -15,6 +15,53 @@
 </head>
 <body>
 
+    <!-- INTRO LOADING SCREEN OVERLAY -->
+    <div id="introOverlay" class="intro-overlay">
+        <div class="intro-letterbox top-box"></div>
+
+        <div class="intro-center-banner">
+            <!-- Animated Floating Hearts background in overlay -->
+            <div class="intro-hearts-bg">
+                <span class="intro-heart h1">♥</span>
+                <span class="intro-heart h2">♥</span>
+                <span class="intro-heart h3">♥</span>
+                <span class="intro-heart h4">♥</span>
+                <span class="intro-heart h5">♥</span>
+            </div>
+
+            <!-- Cupid Arrow Piercing Heart Animation -->
+            <div class="intro-arrow-container">
+                <svg class="arrow-svg" viewBox="0 0 300 80" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Path line for arrow -->
+                    <path class="arrow-line" d="M 10 40 Q 150 20 280 40" stroke="#ffffff" stroke-width="3" fill="none" stroke-dasharray="300" stroke-dashoffset="300"/>
+                    <!-- Arrow Head -->
+                    <polygon points="275,32 295,40 275,48" fill="#ffffff" class="arrow-head"/>
+                    <!-- Feathers/Tail -->
+                    <path d="M 10 40 L 0 30 M 10 40 L 0 50 M 20 40 L 10 30 M 20 40 L 10 50" stroke="#ffffff" stroke-width="3.5" class="arrow-tail"/>
+                </svg>
+                <div class="center-heart">
+                    <i class="bi bi-heart-fill"></i>
+                </div>
+            </div>
+
+            <div class="intro-subtext">make a wish...</div>
+            <h1 class="intro-title">Happy<br>Birthday</h1>
+
+            <!-- Loading progress & interactive button -->
+            <div class="intro-action-container">
+                <div class="intro-progress-bar-bg" id="introProgressBg">
+                    <div class="intro-progress-bar" id="introProgressBar"></div>
+                    <span class="intro-progress-text" id="introProgressText">Loading 0%</span>
+                </div>
+                <button class="intro-enter-btn" id="introEnterBtn">
+                    <i class="bi bi-heart-fill"></i> Klik Untuk Membuka Kejutan <i class="bi bi-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="intro-letterbox bottom-box"></div>
+    </div>
+
     <!-- Audio Background (Soft ambient piano/birthday theme) -->
     <audio id="bgAudio" loop preload="auto">
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=piano-moment-11484.mp3" type="audio/mpeg">
