@@ -3,326 +3,732 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Template CRUD Responsif - Bootstrap 5</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Happy Birthday Sayangku ♥ | Blooming Wishes</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <style>
-        body {
-            background-color: #f8f9fa;
+        :root {
+            --bg-top: #fbf5ee;
+            --bg-bottom: #edd5c4;
+            --text-dark: #6e2a2a;
+            --accent-red: #d93856;
+            --accent-gold: #e5a93b;
+            --font-title: 'Cormorant Garamond', serif;
+            --font-script: 'Great Vibes', cursive;
+            --font-body: 'Montserrat', sans-serif;
         }
-        .table-wrapper {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(180deg, var(--bg-top) 0%, #f6e8dd 50%, var(--bg-bottom) 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Music Toggle Floating Button --- */
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(217, 56, 86, 0.2);
+            color: var(--text-dark);
+            padding: 10px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            transform: translateY(-2px);
+            background: #ffffff;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .music-btn i {
+            font-size: 1.1rem;
+            color: var(--accent-red);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 650px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px 40px;
+            overflow: hidden;
+        }
+
+        /* Header Title */
+        .top-header {
+            z-index: 10;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .top-header h1 {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #802e2e;
+            letter-spacing: 1.5px;
+        }
+
+        /* Tree Canvas container */
+        .tree-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #treeCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* Left Side Birthday Card */
+        .card-container {
+            position: absolute;
+            left: 8%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            max-width: 420px;
+            width: 85%;
+        }
+
+        .greeting-card {
+            background: rgba(255, 253, 249, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 35px 30px;
+            box-shadow: 0 10px 30px rgba(110, 42, 42, 0.08);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .card-subtext-top {
+            font-family: var(--font-title);
+            font-style: italic;
+            font-size: 1.25rem;
+            color: #8c4343;
+            margin-bottom: 5px;
+        }
+
+        .card-main-title {
+            font-family: var(--font-script);
+            font-size: 4.8rem;
+            color: #b82d43;
+            line-height: 1.05;
+            margin: 5px 0 15px;
+            text-shadow: 1px 2px 4px rgba(184, 45, 67, 0.12);
+        }
+
+        .card-subtext-bottom {
+            font-family: var(--font-title);
+            font-size: 1.15rem;
+            color: #7a3a3a;
+            letter-spacing: 0.5px;
+        }
+
+        /* Scroll Button */
+        .scroll-btn-wrapper {
+            z-index: 10;
+            margin-bottom: 10px;
+        }
+
+        .scroll-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(184, 45, 67, 0.25);
+            padding: 10px 24px;
+            border-radius: 30px;
+            color: #802e2e;
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .scroll-btn:hover {
+            background: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(184, 45, 67, 0.15);
+            color: #b82d43;
+        }
+
+        .scroll-btn i {
+            animation: bounce 2s infinite;
+        }
+
+        /* --- SECOND SECTION: MEMORIES & WISHES --- */
+        .memories-section {
+            position: relative;
+            z-index: 10;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-title);
+            font-size: 2.8rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            font-size: 0.95rem;
+            color: #8a4e4e;
+        }
+
+        /* Gallery Cards */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .memory-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(184, 45, 67, 0.12);
+        }
+
+        .memory-img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #f1e2d5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .memory-img svg {
+            width: 60px;
+            height: 60px;
+            fill: #d98a96;
+        }
+
+        .memory-caption {
+            font-family: var(--font-title);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .memory-sub {
+            font-size: 0.85rem;
+            color: #8c5b5b;
+            line-height: 1.4;
+        }
+
+        /* Interactive Wishes Card */
+        .wishes-box {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wishes-box h3 {
+            font-family: var(--font-script);
+            font-size: 3.5rem;
+            color: var(--accent-red);
+            margin-bottom: 15px;
+        }
+
+        .wishes-text {
+            font-family: var(--font-title);
+            font-size: 1.35rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .surprise-btn {
+            background: linear-gradient(135deg, #d93856, #e65c7b);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(217, 56, 86, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .surprise-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(217, 56, 86, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.85rem;
+            color: #945f5f;
+            border-top: 1px solid rgba(148, 95, 95, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(-50%); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(4px); }
+            60% { transform: translateY(2px); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .top-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .card-container {
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+            }
+
+            .greeting-card {
+                padding: 25px 20px;
+                text-align: center;
+            }
+
+            .card-main-title {
+                font-size: 3.8rem;
+            }
+
+            .card-subtext-top {
+                font-size: 1.1rem;
+            }
+
+            .card-subtext-bottom {
+                font-size: 1rem;
+            }
+
+            .wishes-box h3 {
+                font-size: 2.8rem;
+            }
+
+            .wishes-text {
+                font-size: 1.15rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-layers-half me-2"></i>Aplikasi CRUD</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
+    <!-- Audio Background (Soft ambient piano/birthday theme) -->
+    <audio id="bgAudio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=piano-moment-11484.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Control Button -->
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+        <i class="bi bi-disc" id="musicIcon"></i>
+        <span id="musicText">Putar Musik</span>
+    </button>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <!-- Top Title -->
+        <div class="top-header">
+            <h1>Blooming Wishes</h1>
+        </div>
+
+        <!-- Tree Canvas -->
+        <div class="tree-container">
+            <canvas id="treeCanvas"></canvas>
+        </div>
+
+        <!-- Left Greeting Glassmorphism Card -->
+        <div class="card-container">
+            <div class="greeting-card">
+                <div class="card-subtext-top">and... make it count</div>
+                <div class="card-main-title">Happy<br>Birthday</div>
+                <div class="card-subtext-bottom">here's to a year that blooms</div>
+            </div>
+        </div>
+
+        <!-- Scroll Button -->
+        <div class="scroll-btn-wrapper">
+            <a href="#memories" class="scroll-btn">
+                SCROLL FOR MEMORIES <i class="bi bi-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- SECOND SECTION: MEMORIES & WISHES -->
+    <section class="memories-section" id="memories">
+        <div class="section-header">
+            <h2>Momen Indah Bersamamu</h2>
+            <p>Setiap detik adalah kenangan manis yang tak terlupakan ❤️</p>
+        </div>
+
+        <!-- Photo Gallery -->
+        <div class="gallery-grid">
+            <div class="memory-card">
+                <div class="memory-img">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <div class="memory-caption">Awal Senyuman</div>
+                <div class="memory-sub">Saat pertama kali melihat binar di matamu yang menghangatkan hari-hariku.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-img">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <div class="memory-caption">Tawa & Cerita</div>
+                <div class="memory-sub">Setiap percakapan kecil yang berubah menjadi kenangan indah yang abadi.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-img">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <div class="memory-caption">Masa Depan Cerah</div>
+                <div class="memory-sub">Semoga langkahmu ke depan selalu dipenuhi bunga-bunga kebahagiaan dan keberkahan.</div>
+            </div>
+        </div>
+
+        <!-- Wishes Interactive Box -->
+        <div class="wishes-box">
+            <h3>Doa & Harapan Tulus</h3>
+            <p class="wishes-text" id="wishesText">
+                "Selamat Ulang Tahun! Semoga di usia yang baru ini, setiap impianmu mekar dengan indah, langkahmu diliputi kebaikan, dan hatimu selalu dipenuhi kebahagiaan yang tak terhingga. Terima kasih telah hadir dan mewarnai duniaku!"
+            </p>
+            <button class="surprise-btn" onclick="triggerSurprise()">
+                <i class="bi bi-gift-fill"></i> Kirim Hujan Cinta & Kejutkan!
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#"><i class="bi bi-house-door me-1"></i> Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="bi bi-people me-1"></i> Data Pengguna</a>
-                    </li>
-                </ul>
-            </div>
         </div>
-    </nav>
+    </section>
 
-    <!-- Main Container -->
-    <div class="container mb-5">
-        <div class="table-wrapper">
-            <!-- Header Table & Tombol Tambah -->
-            <div class="row align-items-center mb-3 g-2">
-                <div class="col-12 col-md-6">
-                    <h4 class="m-0 text-primary fw-bold"><i class="bi bi-people-fill me-2"></i>Manajemen Data Pengguna</h4>
-                </div>
-                <div class="col-12 col-md-6 text-md-end">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambahData">
-                        <i class="bi bi-plus-circle me-1"></i> Tambah Data Baru
-                    </button>
-                </div>
-            </div>
+    <footer>
+        Dibuat dengan segenap cinta ❤️ | Happy Birthday Sayangku
+    </footer>
 
-            <!-- Filter / Pencarian -->
-            <div class="row mb-3 g-2">
-                <div class="col-12 col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
-                        <input type="text" id="searchInput" class="form-control" placeholder="Cari nama atau email...">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tabel Data Responsif -->
-            <div class="table-responsive">
-                <table class="table table-hover table-striped align-middle border">
-                    <thead class="table-primary">
-                        <tr>
-                            <th scope="col" class="text-center" style="width: 50px;">#</th>
-                            <th scope="col">Nama Lengkap</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Jabatan</th>
-                            <th scope="col" class="text-center">Status</th>
-                            <th scope="col" class="text-center" style="width: 180px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Contoh Baris Data 1 -->
-                        <tr>
-                            <th scope="row" class="text-center">1</th>
-                            <td>Ahmad Dahlan</td>
-                            <td>ahmad@example.com</td>
-                            <td>Administrator</td>
-                            <td class="text-center"><span class="badge bg-success">Aktif</span></td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-info text-white me-1" data-bs-toggle="modal" data-bs-target="#modalDetailData" title="Detail">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-warning text-white me-1" data-bs-toggle="modal" data-bs-target="#modalEditData" title="Edit">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- Contoh Baris Data 2 -->
-                        <tr>
-                            <th scope="row" class="text-center">2</th>
-                            <td>Siti Nurhaliza</td>
-                            <td>siti@example.com</td>
-                            <td>Staff Editor</td>
-                            <td class="text-center"><span class="badge bg-success">Aktif</span></td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-info text-white me-1" data-bs-toggle="modal" data-bs-target="#modalDetailData" title="Detail">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-warning text-white me-1" data-bs-toggle="modal" data-bs-target="#modalEditData" title="Edit">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        <!-- Contoh Baris Data 3 -->
-                        <tr>
-                            <th scope="row" class="text-center">3</th>
-                            <td>Budi Santoso</td>
-                            <td>budi@example.com</td>
-                            <td>Developer</td>
-                            <td class="text-center"><span class="badge bg-secondary">Nonaktif</span></td>
-                            <td class="text-center">
-                                <button class="btn btn-sm btn-info text-white me-1" data-bs-toggle="modal" data-bs-target="#modalDetailData" title="Detail">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-warning text-white me-1" data-bs-toggle="modal" data-bs-target="#modalEditData" title="Edit">
-                                    <i class="bi bi-pencil-square"></i>
-                                </button>
-                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalHapusData" title="Hapus">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Navigasi Halaman / Pagination -->
-            <div class="row align-items-center mt-3 g-2">
-                <div class="col-12 col-md-6 text-center text-md-start text-muted">
-                    Menampilkan 1 hingga 3 dari 3 data
-                </div>
-                <div class="col-12 col-md-6">
-                    <nav>
-                        <ul class="pagination pagination-sm justify-content-center justify-content-md-end m-0">
-                            <li class="page-item disabled"><a class="page-link" href="#">Sebelumnya</a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Berikutnya</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 1: Tambah Data -->
-    <div class="modal fade" id="modalTambahData" tabindex="-1" aria-labelledby="modalTambahDataLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="modalTambahDataLabel"><i class="bi bi-plus-circle me-1"></i> Tambah Data Baru</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="formTambahData">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="tambahNama" class="form-label fw-semibold">Nama Lengkap</label>
-                            <input type="text" class="form-control" id="tambahNama" placeholder="Masukkan nama lengkap" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tambahEmail" class="form-label fw-semibold">Alamat Email</label>
-                            <input type="email" class="form-control" id="tambahEmail" placeholder="nama@example.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tambahJabatan" class="form-label fw-semibold">Jabatan</label>
-                            <input type="text" class="form-control" id="tambahJabatan" placeholder="Masukkan jabatan" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tambahStatus" class="form-label fw-semibold">Status</label>
-                            <select class="form-select" id="tambahStatus" required>
-                                <option value="Aktif">Aktif</option>
-                                <option value="Nonaktif">Nonaktif</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-success"><i class="bi bi-save me-1"></i> Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 2: Edit Data -->
-    <div class="modal fade" id="modalEditData" tabindex="-1" aria-labelledby="modalEditDataLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-white">
-                    <h5 class="modal-title" id="modalEditDataLabel"><i class="bi bi-pencil-square me-1"></i> Edit Data</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="formEditData">
-                    <div class="modal-body">
-                        <input type="hidden" id="editId">
-                        <div class="mb-3">
-                            <label for="editNama" class="form-label fw-semibold">Nama Lengkap</label>
-                            <input type="text" class="form-control" id="editNama" value="Ahmad Dahlan" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editEmail" class="form-label fw-semibold">Alamat Email</label>
-                            <input type="email" class="form-control" id="editEmail" value="ahmad@example.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editJabatan" class="form-label fw-semibold">Jabatan</label>
-                            <input type="text" class="form-control" id="editJabatan" value="Administrator" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editStatus" class="form-label fw-semibold">Status</label>
-                            <select class="form-select" id="editStatus" required>
-                                <option value="Aktif" selected>Aktif</option>
-                                <option value="Nonaktif">Nonaktif</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-warning text-white"><i class="bi bi-check-circle me-1"></i> Perbarui</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 3: Detail Data -->
-    <div class="modal fade" id="modalDetailData" tabindex="-1" aria-labelledby="modalDetailDataLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="modalDetailDataLabel"><i class="bi bi-info-circle me-1"></i> Detail Data</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <dl class="row mb-0">
-                        <dt class="col-sm-4">ID</dt>
-                        <dd class="col-sm-8">1</dd>
-
-                        <dt class="col-sm-4">Nama Lengkap</dt>
-                        <dd class="col-sm-8">Ahmad Dahlan</dd>
-
-                        <dt class="col-sm-4">Email</dt>
-                        <dd class="col-sm-8">ahmad@example.com</dd>
-
-                        <dt class="col-sm-4">Jabatan</dt>
-                        <dd class="col-sm-8">Administrator</dd>
-
-                        <dt class="col-sm-4">Status</dt>
-                        <dd class="col-sm-8"><span class="badge bg-success">Aktif</span></dd>
-                    </dl>
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 4: Hapus Data -->
-    <div class="modal fade" id="modalHapusData" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="modalHapusDataLabel"><i class="bi bi-exclamation-triangle me-1"></i> Konfirmasi Hapus</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus data pengguna ini? Tindakan ini tidak dapat dibatalkan.
-                </div>
-                <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-danger" id="btnKonfirmasiHapus"><i class="bi bi-trash me-1"></i> Ya, Hapus</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Script sederhana untuk interaksi CRUD (Dapat disesuaikan dengan Backend/JS Framework) -->
+    <!-- Canvas Heart Tree & Interactivity Script -->
     <script>
-        // Placeholder handler untuk form Tambah Data
-        document.getElementById('formTambahData').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Data berhasil ditambahkan (simulasi)!');
-            const modalElement = document.getElementById('modalTambahData');
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            modal.hide();
-            this.reset();
-        });
+        // --- MUSIC PLAYER CONTROL ---
+        const bgAudio = document.getElementById('bgAudio');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+        let isPlaying = false;
 
-        // Placeholder handler untuk form Edit Data
-        document.getElementById('formEditData').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Data berhasil diperbarui (simulasi)!');
-            const modalElement = document.getElementById('modalEditData');
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            modal.hide();
-        });
+        function toggleMusic() {
+            if (isPlaying) {
+                bgAudio.pause();
+                musicIcon.className = 'bi bi-disc';
+                musicText.innerText = 'Putar Musik';
+                musicBtn.style.borderColor = 'rgba(217, 56, 86, 0.2)';
+            } else {
+                bgAudio.play().then(() => {
+                    musicIcon.className = 'bi bi-disc-fill spin';
+                    musicText.innerText = 'Musik Depan';
+                    musicBtn.style.borderColor = 'rgba(217, 56, 86, 0.8)';
+                }).catch(e => {
+                    console.log("Audio play error:", e);
+                });
+            }
+            isPlaying = !isPlaying;
+        }
 
-        // Placeholder handler untuk Hapus Data
-        document.getElementById('btnKonfirmasiHapus').addEventListener('click', function() {
-            alert('Data berhasil dihapus (simulasi)!');
-            const modalElement = document.getElementById('modalHapusData');
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            modal.hide();
-        });
+        // --- TREE CANVAS ANIMATION ---
+        const canvas = document.getElementById('treeCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let hearts = [];
+        let fallingHearts = [];
+
+        function resizeCanvas() {
+            width = canvas.parentElement.clientWidth;
+            height = canvas.parentElement.clientHeight;
+            canvas.width = width;
+            canvas.height = height;
+            initTree();
+        }
+
+        // Color palette for tree heart leaves
+        const colors = [
+            '#f43f5e', '#ec4899', '#d93856', '#e11d48',
+            '#fb7185', '#f472b6', '#fbbf24', '#f59e0b',
+            '#e15b7f', '#ff85a1', '#ffb3c6', '#fcbf49'
+        ];
+
+        function drawHeart(ctx, x, y, size, color, angle = 0, opacity = 1) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.globalAlpha = opacity;
+            ctx.fillStyle = color;
+            ctx.beginPath();
+
+            // Draw smooth heart path
+            const topCurveHeight = size * 0.3;
+            ctx.moveTo(0, topCurveHeight);
+            ctx.bezierCurveTo(0, 0, -size / 2, 0, -size / 2, topCurveHeight);
+            ctx.bezierCurveTo(-size / 2, (size + topCurveHeight) / 2, 0, size, 0, size);
+            ctx.bezierCurveTo(0, size, size / 2, (size + topCurveHeight) / 2, size / 2, topCurveHeight);
+            ctx.bezierCurveTo(size / 2, 0, 0, 0, 0, topCurveHeight);
+
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function initTree() {
+            hearts = [];
+            // Determine center coordinates of heart tree canopy
+            // In the video, canopy is on the right side (~ 68% width, ~ 38% height)
+            const isMobile = width < 768;
+            const centerX = isMobile ? width * 0.5 : width * 0.68;
+            const centerY = isMobile ? height * 0.35 : height * 0.38;
+            const scale = isMobile ? Math.min(width, height) * 0.22 : Math.min(width, height) * 0.32;
+
+            // Generate ~850 heart leaves forming a big heart shape canopy
+            const totalHearts = isMobile ? 550 : 900;
+            for (let i = 0; i < totalHearts; i++) {
+                // Heart polar formula for leaf distribution
+                let t = Math.random() * Math.PI * 2;
+                // Rejection sampling for uniform density inside heart
+                let r = Math.sqrt(Math.random());
+
+                // Heart parametric equation
+                let hx = 16 * Math.pow(Math.sin(t), 3);
+                let hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+
+                let leafX = centerX + (hx / 16) * scale * r + (Math.random() - 0.5) * 15;
+                let leafY = centerY + (hy / 16) * scale * r + (Math.random() - 0.5) * 15;
+
+                let size = Math.random() * (isMobile ? 12 : 16) + 8;
+                let color = colors[Math.floor(Math.random() * colors.length)];
+                let angle = (Math.random() - 0.5) * 0.8;
+                let swaySpeed = 0.001 + Math.random() * 0.002;
+                let swayOffset = Math.random() * Math.PI * 2;
+
+                hearts.push({
+                    x: leafX,
+                    y: leafY,
+                    baseX: leafX,
+                    baseY: leafY,
+                    size: size,
+                    color: color,
+                    angle: angle,
+                    swaySpeed: swaySpeed,
+                    swayOffset: swayOffset
+                });
+            }
+        }
+
+        // Draw Tree Trunk and Branches
+        function drawTrunk() {
+            const isMobile = width < 768;
+            const trunkBaseX = isMobile ? width * 0.5 : width * 0.68;
+            const trunkBaseY = height;
+            const trunkTopX = trunkBaseX;
+            const trunkTopY = isMobile ? height * 0.38 : height * 0.42;
+
+            ctx.save();
+            ctx.strokeStyle = '#522323';
+            ctx.fillStyle = '#522323';
+            ctx.lineCap = 'round';
+
+            // Main Trunk
+            ctx.beginPath();
+            ctx.moveTo(trunkBaseX - 18, trunkBaseY);
+            ctx.quadraticCurveTo(trunkBaseX - 5, (trunkBaseY + trunkTopY) / 2, trunkTopX - 6, trunkTopY);
+            ctx.lineTo(trunkTopX + 6, trunkTopY);
+            ctx.quadraticCurveTo(trunkBaseX + 5, (trunkBaseY + trunkTopY) / 2, trunkBaseX + 18, trunkBaseY);
+            ctx.closePath();
+            ctx.fill();
+
+            // Main Branch splits
+            ctx.lineWidth = 10;
+            ctx.beginPath();
+            ctx.moveTo(trunkTopX, trunkTopY + 20);
+            ctx.quadraticCurveTo(trunkTopX - 40, trunkTopY - 40, trunkTopX - 80, trunkTopY - 70);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(trunkTopX, trunkTopY + 20);
+            ctx.quadraticCurveTo(trunkTopX + 40, trunkTopY - 40, trunkTopX + 80, trunkTopY - 70);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(trunkTopX, trunkTopY + 10);
+            ctx.quadraticCurveTo(trunkTopX - 10, trunkTopY - 50, trunkTopX - 30, trunkTopY - 90);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(trunkTopX, trunkTopY + 10);
+            ctx.quadraticCurveTo(trunkTopX + 10, trunkTopY - 50, trunkTopX + 30, trunkTopY - 90);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        let time = 0;
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            time++;
+
+            // 1. Draw Trunk
+            drawTrunk();
+
+            // 2. Draw Heart Canopy Leaves
+            for (let i = 0; i < hearts.length; i++) {
+                let h = hearts[i];
+                let sway = Math.sin(time * h.swaySpeed * 10 + h.swayOffset) * 3;
+                drawHeart(ctx, h.baseX + sway, h.baseY + sway * 0.5, h.size, h.color, h.angle + sway * 0.02);
+            }
+
+            // 3. Spawn and Draw Falling Heart Petals
+            if (Math.random() < 0.25) {
+                const isMobile = width < 768;
+                const centerX = isMobile ? width * 0.5 : width * 0.68;
+                const centerY = isMobile ? height * 0.35 : height * 0.38;
+                fallingHearts.push({
+                    x: centerX + (Math.random() - 0.5) * (isMobile ? 180 : 320),
+                    y: centerY + (Math.random() - 0.5) * 100,
+                    size: Math.random() * 8 + 6,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    speedY: Math.random() * 1.5 + 0.8,
+                    speedX: (Math.random() - 0.5) * 1,
+                    rotation: Math.random() * Math.PI,
+                    rotSpeed: (Math.random() - 0.5) * 0.05,
+                    opacity: 1
+                });
+            }
+
+            for (let i = fallingHearts.length - 1; i >= 0; i--) {
+                let fh = fallingHearts[i];
+                fh.y += fh.speedY;
+                fh.x += fh.speedX + Math.sin(time * 0.05 + i) * 0.5;
+                fh.rotation += fh.rotSpeed;
+                if (fh.y > height - 50) {
+                    fh.opacity -= 0.02;
+                }
+
+                if (fh.opacity <= 0 || fh.y > height) {
+                    fallingHearts.splice(i, 1);
+                } else {
+                    drawHeart(ctx, fh.x, fh.y, fh.size, fh.color, fh.rotation, fh.opacity);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        animate();
+
+        // --- SURPRISE / CONFETTI EFFECT ---
+        function triggerSurprise() {
+            // Burst 80 falling hearts from top
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => {
+                    fallingHearts.push({
+                        x: Math.random() * width,
+                        y: -20,
+                        size: Math.random() * 14 + 8,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        speedY: Math.random() * 3 + 2,
+                        speedX: (Math.random() - 0.5) * 2,
+                        rotation: Math.random() * Math.PI,
+                        rotSpeed: (Math.random() - 0.5) * 0.08,
+                        opacity: 1
+                    });
+                }, i * 30);
+            }
+
+            // Auto play music if paused
+            if (!isPlaying) {
+                toggleMusic();
+            }
+        }
     </script>
 </body>
 </html>
