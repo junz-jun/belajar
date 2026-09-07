@@ -15,6 +15,21 @@
 </head>
 <body>
 
+    <!-- INTRO OVERLAY (Panah Awal Masuk) -->
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-card">
+            <div class="intro-heart-icon">♥</div>
+            <h2>Ada Pesan Spesial Untukmu</h2>
+            <p>Klik panah di bawah untuk membuka dan menumbuhkan kejutan indah</p>
+            <div class="arrow-container" onclick="startTreeGrowth()">
+                <div class="pulse-ring"></div>
+                <button class="intro-arrow-btn" aria-label="Mulai Animasi">
+                    <i class="bi bi-arrow-down-short"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Audio Background (Soft ambient piano/birthday theme) -->
     <audio id="bgAudio" loop preload="auto">
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=piano-moment-11484.mp3" type="audio/mpeg">
@@ -39,7 +54,7 @@
         </div>
 
         <!-- Left Greeting Glassmorphism Card -->
-        <div class="card-container">
+        <div class="card-container" id="heroCardContainer" style="opacity: 0; transform: translateY(-50%) scale(0.9); transition: all 1s ease;">
             <div class="greeting-card">
                 <div class="card-subtext-top">and... make it count</div>
                 <div class="card-main-title">Happy<br>Birthday</div>

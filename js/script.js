@@ -23,13 +23,18 @@ function toggleMusic() {
     isPlaying = !isPlaying;
 }
 
-// --- TREE CANVAS ANIMATION ---
+// --- TREE CANVAS ANIMATION & GROWING CONTROLLER ---
 const canvas = document.getElementById('treeCanvas');
 const ctx = canvas.getContext('2d');
 
 let width, height;
 let hearts = [];
 let fallingHearts = [];
+
+// Animation Progress State
+// growthProgress: 0.0 -> 1.0 (0=invisible, 0.3=trunk growing, 0.6=branches, 1.0=leaves full bloom)
+let isGrowing = false;
+let growthProgress = 0;
 
 function resizeCanvas() {
     if (!canvas) return;
@@ -70,21 +75,16 @@ function drawHeart(ctx, x, y, size, color, angle = 0, opacity = 1) {
 
 function initTree() {
     hearts = [];
-    // Determine center coordinates of heart tree canopy
     const isMobile = width < 768;
     const centerX = isMobile ? width * 0.5 : width * 0.68;
     const centerY = isMobile ? height * 0.35 : height * 0.38;
     const scale = isMobile ? Math.min(width, height) * 0.22 : Math.min(width, height) * 0.32;
 
-    // Generate heart leaves forming a big heart shape canopy
     const totalHearts = isMobile ? 550 : 900;
     for (let i = 0; i < totalHearts; i++) {
-        // Heart polar formula for leaf distribution
         let t = Math.random() * Math.PI * 2;
-        // Rejection sampling for uniform density inside heart
         let r = Math.sqrt(Math.random());
 
-        // Heart parametric equation
         let hx = 16 * Math.pow(Math.sin(t), 3);
         let hy = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
 
@@ -97,6 +97,9 @@ function initTree() {
         let swaySpeed = 0.001 + Math.random() * 0.002;
         let swayOffset = Math.random() * Math.PI * 2;
 
+        // Leaf bloom delay offset based on distance from trunk split
+        let bloomThreshold = 0.3 + (Math.random() * 0.65);
+
         hearts.push({
             x: leafX,
             y: leafY,
@@ -106,18 +109,25 @@ function initTree() {
             color: color,
             angle: angle,
             swaySpeed: swaySpeed,
-            swayOffset: swayOffset
+            swayOffset: swayOffset,
+            bloomThreshold: bloomThreshold
         });
     }
 }
 
-// Draw Tree Trunk and Branches
-function drawTrunk() {
+// Draw Growing Tree Trunk and Branches
+function drawTrunk(progress) {
+    if (progress <= 0) return;
+
     const isMobile = width < 768;
     const trunkBaseX = isMobile ? width * 0.5 : width * 0.68;
     const trunkBaseY = height;
     const trunkTopX = trunkBaseX;
-    const trunkTopY = isMobile ? height * 0.38 : height * 0.42;
+    const fullTrunkTopY = isMobile ? height * 0.38 : height * 0.42;
+
+    // Progress for trunk growth (0 to 0.4)
+    const trunkProgress = Math.min(1, progress / 0.4);
+    const currentTrunkTopY = trunkBaseY - (trunkBaseY - fullTrunkTopY) * trunkProgress;
 
     ctx.save();
     ctx.strokeStyle = '#522323';
@@ -126,34 +136,71 @@ function drawTrunk() {
 
     // Main Trunk
     ctx.beginPath();
-    ctx.moveTo(trunkBaseX - 18, trunkBaseY);
-    ctx.quadraticCurveTo(trunkBaseX - 5, (trunkBaseY + trunkTopY) / 2, trunkTopX - 6, trunkTopY);
-    ctx.lineTo(trunkTopX + 6, trunkTopY);
-    ctx.quadraticCurveTo(trunkBaseX + 5, (trunkBaseY + trunkTopY) / 2, trunkBaseX + 18, trunkBaseY);
+    ctx.moveTo(trunkBaseX - 18 * trunkProgress, trunkBaseY);
+    ctx.quadraticCurveTo(
+        trunkBaseX - 5,
+        (trunkBaseY + currentTrunkTopY) / 2,
+        trunkTopX - 6 * trunkProgress,
+        currentTrunkTopY
+    );
+    ctx.lineTo(trunkTopX + 6 * trunkProgress, currentTrunkTopY);
+    ctx.quadraticCurveTo(
+        trunkBaseX + 5,
+        (trunkBaseY + currentTrunkTopY) / 2,
+        trunkBaseX + 18 * trunkProgress,
+        trunkBaseY
+    );
     ctx.closePath();
     ctx.fill();
 
-    // Main Branch splits
-    ctx.lineWidth = 10;
-    ctx.beginPath();
-    ctx.moveTo(trunkTopX, trunkTopY + 20);
-    ctx.quadraticCurveTo(trunkTopX - 40, trunkTopY - 40, trunkTopX - 80, trunkTopY - 70);
-    ctx.stroke();
+    // Branch splits progress (0.3 to 0.7)
+    if (progress > 0.3) {
+        const branchProgress = Math.min(1, (progress - 0.3) / 0.4);
+        ctx.lineWidth = 10 * branchProgress;
 
-    ctx.beginPath();
-    ctx.moveTo(trunkTopX, trunkTopY + 20);
-    ctx.quadraticCurveTo(trunkTopX + 40, trunkTopY - 40, trunkTopX + 80, trunkTopY - 70);
-    ctx.stroke();
+        // Left main branch
+        ctx.beginPath();
+        ctx.moveTo(trunkTopX, currentTrunkTopY + 20);
+        ctx.quadraticCurveTo(
+            trunkTopX - 40 * branchProgress,
+            currentTrunkTopY - 40 * branchProgress,
+            trunkTopX - 80 * branchProgress,
+            currentTrunkTopY - 70 * branchProgress
+        );
+        ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(trunkTopX, trunkTopY + 10);
-    ctx.quadraticCurveTo(trunkTopX - 10, trunkTopY - 50, trunkTopX - 30, trunkTopY - 90);
-    ctx.stroke();
+        // Right main branch
+        ctx.beginPath();
+        ctx.moveTo(trunkTopX, currentTrunkTopY + 20);
+        ctx.quadraticCurveTo(
+            trunkTopX + 40 * branchProgress,
+            currentTrunkTopY - 40 * branchProgress,
+            trunkTopX + 80 * branchProgress,
+            currentTrunkTopY - 70 * branchProgress
+        );
+        ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(trunkTopX, trunkTopY + 10);
-    ctx.quadraticCurveTo(trunkTopX + 10, trunkTopY - 50, trunkTopX + 30, trunkTopY - 90);
-    ctx.stroke();
+        // Sub branches
+        ctx.beginPath();
+        ctx.moveTo(trunkTopX, currentTrunkTopY + 10);
+        ctx.quadraticCurveTo(
+            trunkTopX - 10 * branchProgress,
+            currentTrunkTopY - 50 * branchProgress,
+            trunkTopX - 30 * branchProgress,
+            currentTrunkTopY - 90 * branchProgress
+        );
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(trunkTopX, currentTrunkTopY + 10);
+        ctx.quadraticCurveTo(
+            trunkTopX + 10 * branchProgress,
+            currentTrunkTopY - 50 * branchProgress,
+            trunkTopX + 30 * branchProgress,
+            currentTrunkTopY - 90 * branchProgress
+        );
+        ctx.stroke();
+    }
 
     ctx.restore();
 }
@@ -163,18 +210,45 @@ function animate() {
     ctx.clearRect(0, 0, width, height);
     time++;
 
-    // 1. Draw Trunk
-    drawTrunk();
-
-    // 2. Draw Heart Canopy Leaves
-    for (let i = 0; i < hearts.length; i++) {
-        let h = hearts[i];
-        let sway = Math.sin(time * h.swaySpeed * 10 + h.swayOffset) * 3;
-        drawHeart(ctx, h.baseX + sway, h.baseY + sway * 0.5, h.size, h.color, h.angle + sway * 0.02);
+    if (isGrowing && growthProgress < 1) {
+        growthProgress += 0.006; // Tree growth speed
+        if (growthProgress >= 1) {
+            growthProgress = 1;
+            // Reveal Hero Greeting Card when tree full bloom
+            const heroCard = document.getElementById('heroCardContainer');
+            if (heroCard) {
+                heroCard.style.opacity = '1';
+                heroCard.style.transform = 'translateY(-50%) scale(1)';
+            }
+        }
     }
 
-    // 3. Spawn and Draw Falling Heart Petals
-    if (Math.random() < 0.25) {
+    // 1. Draw Trunk & Branches
+    drawTrunk(growthProgress);
+
+    // 2. Draw Heart Canopy Leaves if bloom started
+    if (growthProgress > 0.25) {
+        for (let i = 0; i < hearts.length; i++) {
+            let h = hearts[i];
+            if (growthProgress >= h.bloomThreshold) {
+                // Leaf scale factor from 0 to 1 as it blooms
+                let leafScale = Math.min(1, (growthProgress - h.bloomThreshold) / 0.25);
+                let sway = Math.sin(time * h.swaySpeed * 10 + h.swayOffset) * 3;
+                drawHeart(
+                    ctx,
+                    h.baseX + sway,
+                    h.baseY + sway * 0.5,
+                    h.size * leafScale,
+                    h.color,
+                    h.angle + sway * 0.02,
+                    leafScale
+                );
+            }
+        }
+    }
+
+    // 3. Spawn and Draw Falling Heart Petals when fully grown
+    if (growthProgress >= 0.8 && Math.random() < 0.25) {
         const isMobile = width < 768;
         const centerX = isMobile ? width * 0.5 : width * 0.68;
         const centerY = isMobile ? height * 0.35 : height * 0.38;
@@ -210,6 +284,22 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+// START INTRO ANIMATION & TREE GROWTH SEQUENCE
+function startTreeGrowth() {
+    const overlay = document.getElementById('introOverlay');
+    if (overlay) {
+        overlay.classList.add('fade-out');
+    }
+
+    // Start background music automatically on user interaction
+    if (!isPlaying) {
+        toggleMusic();
+    }
+
+    // Start progressive tree growth sequence
+    isGrowing = true;
+}
+
 // Initializer
 window.addEventListener('resize', resizeCanvas);
 if (canvas) {
@@ -219,7 +309,6 @@ if (canvas) {
 
 // --- SURPRISE / CONFETTI EFFECT ---
 function triggerSurprise() {
-    // Burst 80 falling hearts from top
     for (let i = 0; i < 80; i++) {
         setTimeout(() => {
             fallingHearts.push({
@@ -236,7 +325,6 @@ function triggerSurprise() {
         }, i * 30);
     }
 
-    // Auto play music if paused
     if (!isPlaying) {
         toggleMusic();
     }
