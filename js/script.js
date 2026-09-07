@@ -1,3 +1,48 @@
+// --- INTRO OVERLAY & LOADING SIMULATION ---
+document.addEventListener('DOMContentLoaded', () => {
+    const introOverlay = document.getElementById('introOverlay');
+    const introProgressBar = document.getElementById('introProgressBar');
+    const introProgressText = document.getElementById('introProgressText');
+    const introProgressBg = document.getElementById('introProgressBg');
+    const introEnterBtn = document.getElementById('introEnterBtn');
+
+    if (introOverlay && introProgressBar && introEnterBtn) {
+        let progress = 0;
+        const interval = setInterval(() => {
+            // Simulate loading progress
+            progress += Math.floor(Math.random() * 15) + 5;
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+
+                // Hide progress bar & display start button
+                setTimeout(() => {
+                    if (introProgressBg) introProgressBg.style.display = 'none';
+                    introEnterBtn.style.display = 'inline-flex';
+                }, 300);
+            }
+            introProgressBar.style.width = `${progress}%`;
+            introProgressText.innerText = `Loading ${progress}%`;
+        }, 120);
+
+        // Enter Button Event Handler
+        introEnterBtn.addEventListener('click', () => {
+            // Fade out overlay
+            introOverlay.classList.add('fade-out');
+
+            // Remove overlay from DOM after animation completes
+            setTimeout(() => {
+                introOverlay.style.display = 'none';
+            }, 1000);
+
+            // Play background music if paused
+            if (!isPlaying) {
+                toggleMusic();
+            }
+        });
+    }
+});
+
 // --- MUSIC PLAYER CONTROL ---
 const bgAudio = document.getElementById('bgAudio');
 const musicBtn = document.getElementById('musicBtn');
